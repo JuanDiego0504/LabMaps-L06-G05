@@ -59,7 +59,11 @@ def newCatalog():
                'authors': None,
                'tags': None,
                'tagIds': None,
-               'years': None}
+               'years': None,
+               'titles': None
+               }
+    
+    
 
     """
     Esta lista contiene todo los libros encontrados
@@ -120,8 +124,11 @@ def newCatalog():
     La columna 'titles' del archivo books.csv
     """
     # TODO lab 6, agregar el ADT map con newMap()
-    catalog['titles'] = None
-
+    catalog['titles'] = mp.newMap(5000,
+                                  maptype='PROBING',
+                                  loadfactor=0.5,
+                                  cmpfunction=compareTitles)
+    
     return catalog
 
 
@@ -265,12 +272,13 @@ def addBookTag(catalog, tag):
             lt.addLast(tagbook['value']['books'], book['value'])
 
 
-def addBookTitle(catalog, title):
-    # TODO lab 6, agregar el libro al map de titulos
+def addBookTitle(catalog, book):
     """
-    Completar la descripcion de addBookTitle
+    Agrega un libro al mapa de títulos del catálogo.
+    La clave es el título del libro y el valor es el libro.
     """
-    pass
+    title = book['title']
+    mp.put(catalog['titles'], title, book)
 
 
 # ==============================
@@ -310,11 +318,13 @@ def getBooksByYear(catalog, year):
 
 
 def getBookByTitle(catalog, title):
-    # TODO lab 6, retornar el libro con el titulo dado
     """
-    Completar la descripcion de getBookByTitle
+    Retorna el libro que coincide con un título.
     """
-    pass
+    book = mp.get(catalog['titles'], title)
+    if book:
+        return me.getValue(book)
+    return None
 
 
 def booksSize(catalog):
@@ -339,11 +349,10 @@ def tagsSize(catalog):
 
 
 def titlesSize(catalog):
-    # TODO lab 6, retornar el numero de libros en el catalogo
     """
-    Completar la descripcion de titlesSize
+    Número de títulos en el catálogo.
     """
-    pass
+    return mp.size(catalog['titles'])
 
 
 # ==============================
@@ -430,16 +439,15 @@ def compareYears(year1, year2):
         return -1
 
 
-def compareTitles(title, book):
-    # TODO lab 6, cmp para comparar dos titulos de libros para ADT Map
-    """ Completar la descripcion de compareTitles
-
-    Args:
-        title (str): titulo del libro
-        book (ADT mapentry): map entry con el libro
-
-    Returns:
-        int: retrona 0 si son iguales, 1 si el primero es mayor
-        y -1 si el primero es menor
+def compareTitles(title, entry):
     """
-    pass
+    Compara dos títulos de libros. El primero es una cadena
+    y el segundo una entrada de un mapa (map entry).
+    """
+    entryTitle = me.getKey(entry)
+    if (title == entryTitle):
+        return 0
+    elif (title > entryTitle):
+        return 1
+    else:
+        return -1

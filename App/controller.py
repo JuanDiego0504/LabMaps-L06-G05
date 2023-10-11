@@ -55,6 +55,7 @@ def loadData(control):
     loadBooks(control)
     loadTags(control)
     loadBooksTags(control)
+    
 
 
 def loadBooks(control):
@@ -155,17 +156,15 @@ def getBooksYear(control, year):
     return books
 
 
-def getBooksByTitle(control, title):
-    # TODO lab 6, conectar con la funcion model.getBooksByTitle()
+def getBookByTitle(control, title):
     """
-    Completar la descripcion de getBooksByTittle
+    Retorna los libros con un título específico.
     """
-    pass
+    return model.getBookByTitle(control['model'], title)
 
 
 def titlesSize(control):
-    # TODO lab 6, conectar con la funcion model.titlesSize()
     """
-    Completar la descripcion de titlesSize
+    Número de títulos diferentes en el catálogo.
     """
-    pass
+    return model.titlesSize(control['model'])
